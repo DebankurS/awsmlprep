@@ -1,0 +1,12 @@
+{
+  "name": "aws-ml-prep",
+  "version": "1.0.0",
+  "description": "AWS Certified Machine Learning Engineer – Associate (MLA-C01) Study Companion Web App",
+  "main": "server.js",
+  "scripts": {
+    "test": "docker compose up -d --wait && node test.js; docker compose down"
+  },
+  "dependencies": {},
+  "author": "",
+  "license": "ISC"
+}

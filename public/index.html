@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AWS ML Engineer Associate Study Dashboard</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+
+  <!-- Main Container -->
+  <div class="app-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <i class="fa-brands fa-aws"></i>
+        </div>
+        <div class="logo-text">
+          <h1>AWS MLE</h1>
+          <span>Study Companion</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="tracker">
+          <i class="fa-solid fa-list-check"></i>
+          <span>Study Tracker</span>
+        </button>
+        <button class="nav-item" data-tab="notes">
+          <i class="fa-solid fa-book-open"></i>
+          <span>Study Guides</span>
+        </button>
+        <button class="nav-item" data-tab="quiz">
+          <i class="fa-solid fa-circle-question"></i>
+          <span>Mock Exam Quiz</span>
+        </button>
+        <button class="nav-item" data-tab="cheatsheet">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Cheat Sheets</span>
+        </button>
+        <button class="nav-item" data-tab="playground">
+          <i class="fa-solid fa-code"></i>
+          <span>Code Playground</span>
+        </button>
+      </nav>
+
+      <div class="progress-widget">
+        <div class="widget-header">
+          <span>Overall Progress</span>
+          <strong id="widget-pct">0%</strong>
+        </div>
+        <div class="widget-bar-outer">
+          <div class="widget-bar-inner" id="widget-bar" style="width: 0%;"></div>
+        </div>
+        <span class="widget-sub">Keep learning to unlock 100%!</span>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Top Bar / Header -->
+      <header class="top-bar">
+        <div class="page-title">
+          <h2 id="current-tab-title">Study Tracker</h2>
+          <p id="current-tab-desc">Track your progress across the four official MLA-C01 exam domains.</p>
+        </div>
+        <div class="user-actions">
+          <button id="theme-toggle" class="theme-btn" title="Toggle Light/Dark Mode">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <a href="https://aws.amazon.com/certification/certified-machine-learning-engineer-associate/" target="_blank" class="btn-primary">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            <span>Official Guide</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- Content Views -->
+      <div class="content-view-container">
+
+        <!-- TAB 1: STUDY TRACKER -->
+        <section id="tab-tracker" class="tab-panel active">
+          <!-- Stats Summary Cards -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon purple"><i class="fa-solid fa-award"></i></div>
+              <div class="stat-info">
+                <h3>4 Domains</h3>
+                <p>Comprehensive Coverage</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon blue"><i class="fa-solid fa-check-double"></i></div>
+              <div class="stat-info">
+                <h3 id="stat-completed-tasks">0 / 0</h3>
+                <p>Topics Completed</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon green"><i class="fa-solid fa-chart-line"></i></div>
+              <div class="stat-info">
+                <h3 id="stat-completion-rate">0%</h3>
+                <p>Completion Rate</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tailored Study Scheduler -->
+          <div class="card timeline-card" style="margin-bottom: 2.5rem;">
+            <div class="timeline-header-row">
+              <div class="th-left">
+                <div class="card-header-icon"><i class="fa-solid fa-calendar-days"></i></div>
+                <div>
+                  <h3 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; margin-bottom: 0.15rem;">Tailored Study Plan Scheduler</h3>
+                  <p class="card-subtitle" style="margin-bottom: 0 !important;">Choose your preparation pace (2-Week Sprint or 4-Week Pace) to generate a day-by-day roadmap.</p>
+                </div>
+              </div>
+              <div class="th-right">
+                <button class="btn-timeline-toggle active" id="plan-btn-14" onclick="setStudyPlanDuration(14)">2-Week Sprint</button>
+                <button class="btn-timeline-toggle" id="plan-btn-28" onclick="setStudyPlanDuration(28)">4-Week Pace</button>
+              </div>
+            </div>
+
+            <div class="timeline-slider-container">
+              <div class="timeline-track" id="timeline-days-track">
+                <!-- Days/Weeks buttons generated by JS -->
+              </div>
+            </div>
+
+            <div class="timeline-day-detail" id="timeline-day-detail-box">
+              <!-- Selected Day detail generated by JS -->
+            </div>
+          </div>
+
+          <!-- Domains Accordion / Checklist -->
+          <div class="checklist-container" id="domains-checklist">
+            <!-- Dynamic checklist content loaded from JS -->
+          </div>
+        </section>
+
+        <!-- TAB 2: STUDY NOTES -->
+        <section id="tab-notes" class="tab-panel">
+          <div class="notes-layout">
+            <div class="notes-sidebar">
+              <h3>Exam Domains</h3>
+              <ul class="notes-menu" id="notes-menu-list">
+                <li class="active" data-doc="01_data_preparation.md">
+                  <span class="badge">D1</span>
+                  <span class="note-title">Data Preparation</span>
+                </li>
+                <li data-doc="02_model_development.md">
+                  <span class="badge">D2</span>
+                  <span class="note-title">Model Development</span>
+                </li>
+                <li data-doc="03_deployment_and_orchestration.md">
+                  <span class="badge">D3</span>
+                  <span class="note-title">Deployment & Orchestration</span>
+                </li>
+                <li data-doc="04_monitoring_maintenance_security.md">
+                  <span class="badge">D4</span>
+                  <span class="note-title">Monitoring & Security</span>
+                </li>
+              </ul>
+            </div>
+            <div class="notes-content-area card">
+              <div id="notes-loading" class="loading-state hidden">
+                <i class="fa-solid fa-circle-notch fa-spin"></i>
+                <p>Loading study guide notes...</p>
+              </div>
+              <div id="notes-view-body" class="markdown-body">
+                <!-- Notes Content loaded and rendered dynamically -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: MOCK EXAM QUIZ -->
+        <section id="tab-quiz" class="tab-panel">
+          <div class="quiz-container">
+            <!-- Quiz Welcome Screen -->
+            <div id="quiz-intro-card" class="quiz-card card text-center">
+              <div class="quiz-header-icon">
+                <i class="fa-brands fa-aws"></i>
+              </div>
+              <h2>AWS MLE Practice Quiz Center</h2>
+              <p>Test your knowledge with realistic, high-fidelity questions designed to mirror the actual MLA-C01 exam format, spanning all 4 certification domains.</p>
+
+              <div class="quiz-settings">
+                <div class="settings-group">
+                  <label for="quiz-mode">Select Quiz Mode:</label>
+                  <select id="quiz-mode">
+                    <option value="all">Full Exam (All Questions)</option>
+                    <option value="quick">Quick Practice (10 Questions)</option>
+                    <option value="d1">Domain 1: Data Preparation for ML</option>
+                    <option value="d2">Domain 2: ML Model Development</option>
+                    <option value="d3">Domain 3: Deployment and Orchestration</option>
+                    <option value="d4">Domain 4: Monitoring, Maintenance, and Security</option>
+                  </select>
+                </div>
+              </div>
+
+              <button id="start-quiz-btn" class="btn-primary btn-lg">
+                <i class="fa-solid fa-play"></i> Start Quiz
+              </button>
+            </div>
+
+            <!-- Quiz Running Screen -->
+            <div id="quiz-running-card" class="quiz-card card hidden">
+              <div class="quiz-progress-bar">
+                <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 0%;"></div>
+              </div>
+              <div class="quiz-question-header">
+                <span id="quiz-question-number">Question 1 of 10</span>
+                <span id="quiz-question-domain" class="domain-tag">Domain 1</span>
+              </div>
+
+              <h3 id="quiz-question-text" class="question-text">Question text goes here?</h3>
+
+              <div class="quiz-options" id="quiz-options-list">
+                <!-- Dynamically filled with option buttons -->
+              </div>
+
+              <div class="quiz-feedback-box hidden" id="quiz-feedback-box">
+                <div class="feedback-icon" id="feedback-icon"></div>
+                <div class="feedback-text">
+                  <h4 id="feedback-heading">Correct!</h4>
+                  <p id="feedback-explanation">Explanation details go here.</p>
+                </div>
+              </div>
+
+              <div class="quiz-controls">
+                <span class="quiz-score-indicator" id="quiz-score-indicator">Score: 0/0</span>
+                <button id="quiz-next-btn" class="btn-primary" disabled>
+                  <span>Next Question</span>
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Quiz Results Screen -->
+            <div id="quiz-results-card" class="quiz-card card text-center hidden">
+              <div class="results-trophy">
+                <i class="fa-solid fa-trophy"></i>
+              </div>
+              <h2>Quiz Completed!</h2>
+              <p class="lead-text">You scored <strong id="results-score">0 / 0</strong> (<strong id="results-percentage">0%</strong>)</p>
+              <div class="results-feedback" id="results-feedback-text">
+                Excellent! You are well-prepared for the exam. Keep reviewing.
+              </div>
+
+              <div class="results-actions">
+                <button id="restart-quiz-btn" class="btn-secondary">
+                  <i class="fa-solid fa-rotate-left"></i> Try Again
+                </button>
+                <button id="quiz-review-tracker-btn" class="btn-primary">
+                  <i class="fa-solid fa-list-check"></i> Back to Tracker
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 4: CHEATSHEETS -->
+        <section id="tab-cheatsheet" class="tab-panel">
+          <div class="cheatsheets-grid">
+            <!-- Card 1: ML Service Selection Matrix -->
+            <div class="cheatsheet-card card">
+              <div class="card-header-icon"><i class="fa-solid fa-sitemap"></i></div>
+              <h3>AWS ML Service Selection Matrix</h3>
+              <p class="card-subtitle">Choose the right SageMaker mode based on requirements.</p>
+
+              <table class="cheat-table">
+                <thead>
+                  <tr>
+                    <th>Approach</th>
+                    <th>Skill Required</th>
+                    <th>Flexibility</th>
+                    <th>Best For</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>SageMaker Autopilot</strong></td>
+                    <td>Minimal (AutoML)</td>
+                    <td>Low</td>
+                    <td>Unknown best algorithm; tabular classification/regression</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Built-in Algorithms</strong></td>
+                    <td>Low (config only)</td>
+                    <td>Medium</td>
+                    <td>Standard problems (XGBoost, Linear Learner, RCF)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>JumpStart Models</strong></td>
+                    <td>Low–Medium</td>
+                    <td>Medium</td>
+                    <td>Pre-trained LLMs/vision models with minimal fine-tuning</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Script Mode</strong></td>
+                    <td>Medium (custom code)</td>
+                    <td>High</td>
+                    <td>Custom PyTorch/TF training scripts with managed infra</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Custom Container</strong></td>
+                    <td>High (Docker)</td>
+                    <td>Highest</td>
+                    <td>Non-standard frameworks, private dependencies</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Card 2: Inference Mode Comparison -->
+            <div class="cheatsheet-card card">
+              <div class="card-header-icon"><i class="fa-solid fa-server"></i></div>
+              <h3>SageMaker Inference Mode Decision</h3>
+              <p class="card-subtitle">Match inference mode to latency and traffic requirements.</p>
+
+              <div class="metric-bullets">
+                <div class="metric-bullet">
+                  <div class="mb-title">Real-Time Endpoint</div>
+                  <div class="mb-desc">Persistent, low-latency synchronous API. Pay per hour. Use when <strong>SLA requires &lt; 1s response.</strong></div>
+                </div>
+                <div class="metric-bullet">
+                  <div class="mb-title">Serverless Inference</div>
+                  <div class="mb-desc">Scales to zero, pay per invocation. Use for <strong>sporadic/unpredictable traffic</strong> with no idle cost requirement.</div>
+                </div>
+                <div class="metric-bullet">
+                  <div class="mb-title">Async Inference</div>
+                  <div class="mb-desc">Background processing, result in S3. Use for <strong>large payloads (&gt;6 MB) or long jobs (&gt;60s)</strong>.</div>
+                </div>
+                <div class="metric-bullet">
+                  <div class="mb-title">Batch Transform</div>
+                  <div class="mb-desc">Offline bulk scoring from S3. Use for <strong>scheduled batch inference</strong> on millions of records.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Data Ingestion Patterns -->
+            <div class="cheatsheet-card card">
+              <div class="card-header-icon"><i class="fa-solid fa-database"></i></div>
+              <h3>AWS ML Data Ingestion Patterns</h3>
+              <table class="cheat-table">
+                <thead>
+                  <tr>
+                    <th>Service</th>
+                    <th>Type</th>
+                    <th>Best For</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>AWS Glue</strong></td>
+                    <td>Batch ETL (Spark)</td>
+                    <td>Large-scale structured/semi-structured transforms</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Kinesis Data Streams</strong></td>
+                    <td>Real-time streaming</td>
+                    <td>Sub-second latency; custom consumers; replay</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Kinesis Firehose</strong></td>
+                    <td>Streaming delivery</td>
+                    <td>Managed delivery to S3/Redshift; no consumer code</td>
+                  </tr>
+                  <tr>
+                    <td><strong>SageMaker Processing</strong></td>
+                    <td>Batch (managed)</td>
+                    <td>Preprocessing, evaluation within SageMaker Pipelines</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Card 4: Model Monitor Types -->
+            <div class="cheatsheet-card card">
+              <div class="card-header-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
+              <h3>SageMaker Model Monitor — Four Types</h3>
+              <div class="skew-drift-box">
+                <div class="sd-block">
+                  <strong>Data Quality Monitor</strong>
+                  <p>Detects input feature drift: null rates, type mismatches, value range violations. No ground truth needed.</p>
+                  <span><em>Fix:</em> Investigate upstream data pipeline for schema changes.</span>
+                </div>
+                <hr>
+                <div class="sd-block">
+                  <strong>Model Quality Monitor</strong>
+                  <p>Tracks accuracy/error rate vs ground truth labels over time. Requires ground truth ingestion.</p>
+                  <span><em>Fix:</em> Trigger retraining pipeline when metrics fall below threshold.</span>
+                </div>
+                <hr>
+                <div class="sd-block">
+                  <strong>Bias Drift Monitor</strong>
+                  <p>Detects fairness metric drift (Disparate Impact, Equal Opportunity) across demographic groups.</p>
+                  <span><em>Fix:</em> Retrain with updated fairness constraints; audit data collection.</span>
+                </div>
+                <hr>
+                <div class="sd-block">
+                  <strong>Feature Attribution Drift</strong>
+                  <p>Detects SHAP value distribution changes — model relying on different features than at training.</p>
+                  <span><em>Fix:</em> Investigate data quality; consider retraining.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 5: Security Checklist -->
+            <div class="cheatsheet-card card">
+              <div class="card-header-icon"><i class="fa-solid fa-shield-halved"></i></div>
+              <h3>SageMaker Security Checklist</h3>
+              <p class="card-subtitle">Apply these for a secure production ML deployment.</p>
+              <table class="cheat-table">
+                <thead>
+                  <tr>
+                    <th>Control</th>
+                    <th>Implementation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Least Privilege IAM</strong></td>
+                    <td>Grant only specific S3 buckets, ECR, KMS needed</td>
+                  </tr>
+                  <tr>
+                    <td><strong>VPC Isolation</strong></td>
+                    <td>Training/processing in private subnets + VPC endpoints</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Encryption at Rest</strong></td>
+                    <td>KMS CMK for S3, EBS, EFS, SageMaker Studio</td>
+                  </tr>
+                  <tr>
+                    <td><strong>No Secrets in Code</strong></td>
+                    <td>Use Secrets Manager or SSM Parameter Store</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Network Isolation</strong></td>
+                    <td>`enable_network_isolation=True` on training jobs</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Audit Logging</strong></td>
+                    <td>CloudTrail for all SageMaker API calls</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Card 6: Distributed Training Decision -->
+            <div class="cheatsheet-card card">
+              <div class="card-header-icon"><i class="fa-solid fa-diagram-project"></i></div>
+              <h3>Distributed Training Strategy</h3>
+              <p class="card-subtitle">Choose based on model size vs. data size.</p>
+              <div class="skew-drift-box">
+                <div class="sd-block">
+                  <strong>SageMaker Distributed Data Parallel (SDP)</strong>
+                  <p>Model fits on one GPU. Data split across workers. AllReduce gradient aggregation.</p>
+                  <span><em>Use when:</em> Standard deep learning models (ResNet, BERT) on large datasets.</span>
+                </div>
+                <hr>
+                <div class="sd-block">
+                  <strong>SageMaker Distributed Model Parallel (SMP)</strong>
+                  <p>Model exceeds single GPU memory. Layers split across GPUs via pipeline/tensor parallelism.</p>
+                  <span><em>Use when:</em> LLMs, GPT-scale models that don't fit on a single GPU.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 5: CODE PLAYGROUND -->
+        <section id="tab-playground" class="tab-panel">
+          <div class="playground-layout">
+            <div class="playground-selector card">
+              <h3>Select Template Snippet</h3>
+              <p>Review key production-level SageMaker code patterns that appear in architectural and implementation questions.</p>
+
+              <div class="snippet-buttons" id="snippet-btn-container">
+                <button class="snippet-btn active" data-file="sagemaker_training_job.py">
+                  <i class="fa-solid fa-brain"></i>
+                  <div class="sb-text">
+                    <strong>SageMaker Training Job</strong>
+                    <span>XGBoost Built-in + HPO</span>
+                  </div>
+                </button>
+                <button class="snippet-btn" data-file="sagemaker_pipeline.py">
+                  <i class="fa-solid fa-cubes"></i>
+                  <div class="sb-text">
+                    <strong>SageMaker Pipeline</strong>
+                    <span>MLOps CI/CD Orchestration</span>
+                  </div>
+                </button>
+                <button class="snippet-btn" data-file="sagemaker_endpoint.py">
+                  <i class="fa-solid fa-server"></i>
+                  <div class="sb-text">
+                    <strong>SageMaker Endpoint</strong>
+                    <span>Deploy, A/B Test, Auto-Scale</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div class="playground-viewer card">
+              <div class="viewer-header">
+                <span class="file-name-tag" id="current-snippet-name">sagemaker_training_job.py</span>
+                <button class="btn-icon" id="copy-snippet-btn" title="Copy Code">
+                  <i class="fa-regular fa-copy"></i>
+                  <span>Copy</span>
+                </button>
+              </div>
+              <div class="viewer-body">
+                <pre><code id="snippet-code-block" class="language-python">-- Code will load here --</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Loading local scripts -->
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
