@@ -129,7 +129,19 @@ Amazon Macie uses ML to discover and protect sensitive data in S3:
 | **AWS Security Hub** | Centralized security findings aggregation |
 | **SageMaker Lineage** | Tracks data → training → model → endpoint provenance |
 
-## 9. Cost Optimization for Production ML
+## 9. Amazon Bedrock Security Controls
+
+| Control | What It Does |
+|---|---|
+| **Guardrails** | Inference-time filters: block harmful topics, detect/redact PII, apply grounding checks |
+| **VPC Endpoint** | Route Bedrock API calls through PrivateLink — no public internet |
+| **CloudTrail logging** | Every `InvokeModel` call logged; use for audit and compliance |
+| **Encryption** | All data encrypted in transit (TLS) and at rest (AWS-managed or CMK) |
+| **IAM resource policies** | Restrict which principals can invoke specific foundation models |
+
+> **Exam tip:** Guardrails ≠ fine-tuning safety. Guardrails are applied at request/response time on every invocation. They complement, not replace, RLHF or safety fine-tuning baked into the base model.
+
+## 10. Cost Optimization for Production ML
 
 - **Right-size instances**: use SageMaker Profiler to identify idle GPU/CPU time; downsize if utilization < 50%.
 - **Spot Instances**: use managed Spot Training for training jobs (up to 90% savings); requires checkpointing for resumability.

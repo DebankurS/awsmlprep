@@ -16,6 +16,7 @@ from sagemaker.estimator import Estimator
 from sagemaker.model import Model
 from sagemaker.model_metrics import ModelMetrics, MetricsSource
 from sagemaker.workflow.pipeline_context import PipelineSession
+from sagemaker.workflow.properties import PropertyFile
 
 session = PipelineSession()
 region = boto3.Session().region_name
@@ -79,7 +80,7 @@ evaluation_step = ProcessingStep(
     ],
     outputs=[ProcessingOutput(output_name="evaluation", source="/opt/ml/processing/evaluation")],
     code="evaluate.py",     # Writes evaluation.json with {"metrics": {"auc": {"value": 0.87}}}
-    property_files=[sagemaker.workflow.properties.PropertyFile(name="EvaluationReport", output_name="evaluation", path="evaluation.json")]
+    property_files=[PropertyFile(name="EvaluationReport", output_name="evaluation", path="evaluation.json")]
 )
 
 # --- STEP 4: CONDITIONAL MODEL REGISTRATION ---

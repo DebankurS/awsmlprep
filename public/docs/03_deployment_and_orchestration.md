@@ -133,4 +133,4 @@ Alternative to SageMaker Pipelines for complex cross-service orchestration.
 - **Canary releases**: start with 1–5% traffic to new version; gradually increase.
 - **Shadow mode**: send all requests to both models; compare outputs without serving new model's predictions to users.
 - **Model compression**: quantization (INT8), pruning, distillation to reduce model size for faster inference.
-- **Elastic Inference**: attach fractional GPU acceleration (EI accelerator) to CPU instances for cost-effective deep learning inference (1/10th the cost of full GPU instances).
+- ~~**Elastic Inference**~~: deprecated by AWS in April 2023 — no longer available. Use Inferentia2 (`ml.inf2`) instances or GPU instances instead.

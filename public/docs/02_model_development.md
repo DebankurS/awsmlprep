@@ -41,6 +41,15 @@ SageMaker Autopilot automates the full ML pipeline: data analysis, feature engin
 **Supports**: Binary classification, multiclass classification, regression, time-series forecasting.
 **Explainability**: automatically generates SageMaker Clarify explainability report for the best model.
 
+**SageMaker Canvas** — no-code, browser-based AutoML for business analysts (non-developers). Same AutoML engine as Autopilot, no SDK or code required.
+
+| | SageMaker Autopilot | SageMaker Canvas |
+|---|---|---|
+| Interface | Python SDK / Console | Point-and-click UI only |
+| Target user | Data scientists | Business analysts |
+| Access to notebooks | Yes (editable candidate notebooks) | No |
+| MLflow / Pipelines integration | Yes | No |
+
 ## 4. Hyperparameter Tuning (Automatic Model Tuning)
 
 SageMaker Automatic Model Tuning uses **Bayesian optimization** by default.
@@ -72,6 +81,14 @@ The model itself is split across GPUs/instances because it doesn't fit on a sing
 ### SageMaker Training Compiler
 - Converts model computations to optimized XLA operations. Reduces training time for TF/PyTorch by 10–40%.
 - Drop-in: add `compiler_config=TrainingCompilerConfig()` to your Estimator.
+
+### SageMaker HyperPod
+Managed cluster for long-running, large-scale distributed training (LLM pre-training and fine-tuning at scale).
+
+- **Resilient training**: auto-detects node failures, checkpoints automatically, replaces the failed node, and resumes — avoids restarting multi-day jobs from scratch.
+- **Cluster management**: integrates with Slurm or Amazon EKS for scheduling across hundreds of GPUs/Trainium chips.
+- **Fast interconnect**: uses AWS EFA (Elastic Fabric Adapter) for low-latency GPU-to-GPU communication across nodes.
+- **Use when**: training runs span days or weeks on large clusters (e.g., LLM pre-training, large vision model training).
 
 ## 6. SageMaker Experiments
 
@@ -114,14 +131,43 @@ SageMaker Clarify computes **SHAP (SHapley Additive exPlanations)** feature attr
 - **Local explanations**: why the model made a specific prediction for a single record.
 - Integrates with SageMaker Model Monitor for **Feature Attribution Drift** monitoring in production.
 
-## 9. Model Selection Decision Guide
+## 9. Amazon Bedrock
+
+Amazon Bedrock is a fully managed, serverless API for foundation models — no infrastructure to provision or manage.
+
+**Bedrock vs SageMaker JumpStart:**
+
+| | Amazon Bedrock | SageMaker JumpStart |
+|---|---|---|
+| Infrastructure | Fully managed, serverless | You manage SageMaker endpoints |
+| Access pattern | `InvokeModel` API call | Deploy endpoint, then invoke |
+| Fine-tuning | Supported (Titan, Llama, select models) | Broader model list |
+| Cost model | Per token (on-demand) or Provisioned Throughput | Per endpoint-hour |
+| Private deployment | No (AWS-managed infra) | Yes (runs in your account) |
+| Best for | Quick FM integration, RAG, agents | Custom fine-tuning, private/VPC deployment |
+
+**Core Bedrock capabilities:**
+
+- **Model catalog**: Claude (Anthropic), Amazon Titan, Llama (Meta), Mistral, Stable Diffusion, and more.
+- **Knowledge Bases** (RAG): connect a vector store (OpenSearch Serverless, Pinecone, RDS pgvector) to retrieve relevant documents and ground model responses — reduces hallucinations.
+- **Agents**: orchestrate multi-step tasks using tool use; action groups backed by Lambda functions or OpenAPI schemas.
+- **Guardrails**: inference-time content filters — block topics, detect/redact PII, filter harmful content, apply grounding checks to reduce hallucinations.
+- **Fine-tuning**: supported for Amazon Titan and select open models; provide labeled data in S3, Bedrock handles training infra.
+- **Provisioned Throughput**: commit to a fixed throughput (model units) for predictable latency and pricing at high volume.
+
+> **Exam tip:** Bedrock = serverless FM API (no infra). JumpStart = deploy FM on your SageMaker endpoint (infra in your account). Guardrails apply at inference time, not training time.
+
+## 10. Model Selection Decision Guide
 
 | Scenario | Recommended Approach |
 |---|---|
 | Standard tabular classification, no code preferred | SageMaker built-in XGBoost or Linear Learner |
-| AutoML, algorithm unknown | SageMaker Autopilot |
+| AutoML, algorithm unknown, developer workflow | SageMaker Autopilot |
+| AutoML, no-code, business analyst | SageMaker Canvas |
 | Custom PyTorch/TF model | Script Mode with managed container |
-| Pre-trained LLM fine-tuning | SageMaker JumpStart |
+| Pre-trained LLM fine-tune + private endpoint | SageMaker JumpStart |
+| FM access via API, RAG, or agents | Amazon Bedrock |
+| LLM pre-training across 100s of GPUs, multi-day jobs | SageMaker HyperPod |
 | Unsupervised anomaly detection | Random Cut Forest (RCF) |
 | Time-series forecasting | DeepAR |
 | Recommendation system | Factorization Machines |

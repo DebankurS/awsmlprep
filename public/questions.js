@@ -505,6 +505,106 @@ const PRACTICE_QUESTIONS = [
     ],
     answer: 1,
     explanation: "SageMaker Processing Jobs run arbitrary batch workloads (scikit-learn, Spark, custom containers) on managed compute. They are used for: data preprocessing before training, feature engineering, post-processing inference output, model evaluation (computing metrics), and bias/explainability analysis via SageMaker Clarify."
+  },
+  // ============================================================
+  // DOMAIN 1: DATA PREPARATION (additional)
+  // ============================================================
+  {
+    id: 39,
+    domain: "Domain 1: Data Preparation for ML",
+    question: "When retrieving features from SageMaker Feature Store to build a training dataset, why must you use point-in-time (as-of) joins?",
+    options: [
+      "To improve query performance by reducing the scan range",
+      "To ensure only feature values available at the original prediction time are used, preventing future data leakage",
+      "To join features from the online store with the offline store automatically",
+      "To reduce storage costs by deduplicating feature records"
+    ],
+    answer: 1,
+    explanation: "Point-in-time joins retrieve the feature value that existed at or before a specific timestamp (the label event time). Without this, training could inadvertently use feature values from after the event, leaking future information into training and causing inflated offline metrics that don't generalize to production."
+  },
+  {
+    id: 40,
+    domain: "Domain 1: Data Preparation for ML",
+    question: "You need to auto-discover the schema of raw CSV and Parquet files landing in S3 and make them queryable via Amazon Athena. Which AWS Glue feature handles this with no manual schema definition?",
+    options: [
+      "AWS Glue DataBrew visual recipes",
+      "AWS Glue Crawlers writing to the Glue Data Catalog",
+      "AWS Glue Streaming ETL jobs",
+      "Amazon Kinesis Data Firehose with schema detection"
+    ],
+    answer: 1,
+    explanation: "AWS Glue Crawlers scan S3 paths, infer schemas (column names, types, partitions), and write table definitions to the Glue Data Catalog. Once cataloged, tables are immediately queryable via Athena or accessible to Glue ETL jobs — no manual DDL needed. DataBrew is for visual transformations; Streaming ETL is for continuous processing."
+  },
+  // ============================================================
+  // DOMAIN 2: ML MODEL DEVELOPMENT (additional)
+  // ============================================================
+  {
+    id: 41,
+    domain: "Domain 2: ML Model Development",
+    question: "Your team wants to integrate a large language model into an application using a simple API call, without managing any SageMaker endpoints or EC2 instances. Which AWS service is the correct choice?",
+    options: [
+      "SageMaker JumpStart with auto-scaling to zero",
+      "Amazon Bedrock with on-demand model invocation",
+      "SageMaker Serverless Inference with a foundation model container",
+      "Amazon Comprehend with a custom classifier"
+    ],
+    answer: 1,
+    explanation: "Amazon Bedrock is a fully managed, serverless API for foundation models. You call InvokeModel (or InvokeModelWithResponseStream) and pay per token — no endpoints, no instances, no infrastructure to manage. SageMaker JumpStart deploys a foundation model to a SageMaker endpoint that runs in your account and requires instance management."
+  },
+  {
+    id: 42,
+    domain: "Domain 2: ML Model Development",
+    question: "You are building a chatbot that must answer questions based on proprietary internal documents, using an Amazon Bedrock foundation model. Which Bedrock feature prevents hallucinations by grounding responses in retrieved document chunks?",
+    options: [
+      "Bedrock Guardrails with grounding checks",
+      "Bedrock Knowledge Bases (Retrieval-Augmented Generation)",
+      "Bedrock Agents with a Lambda action group",
+      "Bedrock fine-tuning with the internal document corpus"
+    ],
+    answer: 1,
+    explanation: "Amazon Bedrock Knowledge Bases implements RAG: documents are chunked, embedded into a vector store (OpenSearch Serverless, Pinecone, etc.), and at query time, semantically similar chunks are retrieved and injected into the model prompt. This grounds the response in actual document content rather than model weights, reducing hallucinations. Guardrails apply content filters; Agents orchestrate multi-step tasks; fine-tuning bakes knowledge into weights but doesn't guarantee factual grounding at inference time."
+  },
+  {
+    id: 43,
+    domain: "Domain 2: ML Model Development",
+    question: "Your team is pre-training a 70B parameter LLM across a 256-GPU cluster. Jobs run for 10+ days. Node failures mid-run force restarts from the beginning, wasting days of compute. Which SageMaker feature directly solves this?",
+    options: [
+      "SageMaker Distributed Data Parallel with gradient checkpointing",
+      "SageMaker HyperPod with automatic failure detection and job resumption",
+      "SageMaker Managed Spot Training with checkpointing to S3",
+      "SageMaker Training Compiler with XLA optimization"
+    ],
+    answer: 1,
+    explanation: "SageMaker HyperPod is designed for long-running, large-scale cluster training. It auto-detects node failures, replaces the failed node, and resumes training from the last checkpoint — without restarting the entire job. Spot Training handles interruptions from AWS spot capacity reclamation but doesn't replace failed nodes. DDP + gradient checkpointing reduces memory use, not failure recovery. Training Compiler optimizes compute operations."
+  },
+  {
+    id: 44,
+    domain: "Domain 2: ML Model Development",
+    question: "A business analyst with no coding experience needs to build a churn prediction model from a CSV file in S3, without writing any Python or SQL. Which SageMaker service is designed for this use case?",
+    options: [
+      "SageMaker Autopilot via the Python SDK",
+      "SageMaker Canvas",
+      "SageMaker Studio with a Jupyter notebook",
+      "SageMaker JumpStart fine-tuning UI"
+    ],
+    answer: 1,
+    explanation: "SageMaker Canvas is the no-code, browser-based AutoML interface built for business analysts who don't write code. Users import data, select a target column, and Canvas handles the full ML pipeline (same engine as Autopilot). Autopilot requires the Python SDK or boto3; Studio requires notebook coding; JumpStart fine-tuning requires configuring training parameters."
+  },
+  // ============================================================
+  // DOMAIN 4: MONITORING, MAINTENANCE, AND SECURITY (additional)
+  // ============================================================
+  {
+    id: 45,
+    domain: "Domain 4: Monitoring, Maintenance, and Security",
+    question: "Your Amazon Bedrock-powered application must block responses that contain PII (names, SSNs) and refuse to answer off-topic questions outside your domain. Which Bedrock feature enforces these constraints at inference time?",
+    options: [
+      "Fine-tune the foundation model to refuse those topics",
+      "Amazon Bedrock Guardrails with PII redaction and denied topic filters",
+      "IAM resource policies restricting InvokeModel permissions",
+      "Amazon Macie scanning the Bedrock response stream"
+    ],
+    answer: 1,
+    explanation: "Amazon Bedrock Guardrails apply configurable filters at every model invocation: denied topics block off-domain questions, PII detection redacts or blocks sensitive entities in inputs and outputs, content filters block harmful content, and grounding checks reduce hallucinations. IAM controls who can call the API, not what the model says. Macie scans S3, not live API responses. Fine-tuning affects model weights but cannot guarantee runtime content enforcement."
   }
 ];
 
