@@ -1,0 +1,184 @@
+[
+  {
+    "id": 9,
+    "domain": "Domain 2: ML Model Development",
+    "question": "You need to train an XGBoost classifier on a 10 GB tabular dataset stored in S3, without writing a custom training script. Which SageMaker capability should you use?",
+    "options": [
+      "SageMaker Autopilot with XGBoost mode",
+      "SageMaker built-in XGBoost algorithm with a SageMaker Estimator",
+      "Amazon Comprehend custom classifier",
+      "SageMaker JumpStart foundation model fine-tuning"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker provides XGBoost as a built-in algorithm. You simply create a SageMaker Estimator pointing to the XGBoost container, specify hyperparameters, and point to your S3 data — no custom training script required. SageMaker Autopilot would also work but adds full AutoML overhead."
+  },
+  {
+    "id": 10,
+    "domain": "Domain 2: ML Model Development",
+    "question": "Your team wants to automatically discover the best ML algorithm and hyperparameters for a tabular classification problem with minimal code. Which SageMaker feature should you use?",
+    "options": [
+      "SageMaker Debugger",
+      "SageMaker Autopilot",
+      "SageMaker Experiments",
+      "SageMaker Clarify"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker Autopilot is the SageMaker AutoML feature. It automatically explores multiple ML algorithms, generates candidate pipelines with preprocessing, trains and tunes models, and produces a leaderboard. It supports explainability reports and can be fully automated or semi-automated."
+  },
+  {
+    "id": 11,
+    "domain": "Domain 2: ML Model Development",
+    "question": "Which SageMaker feature allows you to track metrics, parameters, and artifacts across multiple training runs for comparison and reproducibility?",
+    "options": [
+      "SageMaker Model Registry",
+      "SageMaker Feature Store",
+      "SageMaker Experiments",
+      "SageMaker Pipelines"
+    ],
+    "answer": 2,
+    "explanation": "SageMaker Experiments tracks training runs as trials within an experiment. You can log custom metrics (loss, accuracy), parameters (learning rate, batch size), and output artifacts, then compare them in SageMaker Studio. Model Registry manages model versions post-training; Pipelines orchestrates workflows."
+  },
+  {
+    "id": 12,
+    "domain": "Domain 2: ML Model Development",
+    "question": "You are training a deep learning model that has high training accuracy but poor validation accuracy. Which techniques should you apply to address this overfitting?",
+    "options": [
+      "Reduce the number of epochs and decrease the learning rate",
+      "Apply L1/L2 regularization, add dropout layers, use early stopping, and collect more training data",
+      "Switch from GPU to CPU training to slow down the learning process",
+      "Increase model complexity by adding more hidden layers"
+    ],
+    "answer": 1,
+    "explanation": "Overfitting (high variance) is addressed by: regularization (L1/L2 adds penalty to weights), dropout (randomly zeroes neurons during training), early stopping (halt before validation loss increases), and data augmentation/collecting more data. Increasing complexity makes overfitting worse."
+  },
+  {
+    "id": 13,
+    "domain": "Domain 2: ML Model Development",
+    "question": "SageMaker Hyperparameter Tuning (HPO) uses which optimization strategy by default to efficiently search the hyperparameter space?",
+    "options": [
+      "Grid search across all hyperparameter combinations",
+      "Random search with uniform distribution",
+      "Bayesian optimization using a surrogate model of previous results",
+      "Genetic algorithm with tournament selection"
+    ],
+    "answer": 2,
+    "explanation": "SageMaker Automatic Model Tuning (Hyperparameter Tuning) uses Bayesian optimization by default. It builds a probabilistic model (Gaussian process) of how hyperparameters affect the objective metric, then uses it to select the most promising parameters for the next trial — far more sample-efficient than grid or random search."
+  },
+  {
+    "id": 14,
+    "domain": "Domain 2: ML Model Development",
+    "question": "Which SageMaker built-in algorithm is most appropriate for detecting anomalies in a high-dimensional dataset where you don't have labeled anomaly examples?",
+    "options": [
+      "Linear Learner with binary classification",
+      "Random Cut Forest (RCF)",
+      "XGBoost with anomaly_score objective",
+      "K-Nearest Neighbors (KNN)"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker's Random Cut Forest (RCF) is designed for unsupervised anomaly detection. It assigns anomaly scores to data points based on how much including a point changes the complexity of a tree structure — high score = likely anomaly. No labels required."
+  },
+  {
+    "id": 15,
+    "domain": "Domain 2: ML Model Development",
+    "question": "Your model training job requires 8 GPU instances. Which SageMaker distributed training strategy should you use for a data-parallel workload with PyTorch?",
+    "options": [
+      "SageMaker Pipe Mode with HDFS",
+      "SageMaker Distributed Data Parallel (SageMaker DDP) library",
+      "SageMaker Batch Transform with multi-instance scoring",
+      "SageMaker Serverless inference with concurrency"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker's Distributed Data Parallel (DDP) library optimizes AllReduce gradient communication across instances on AWS infrastructure. It integrates with PyTorch's DDP and TensorFlow's MirroredStrategy, and is specifically optimized for SageMaker's networking fabric for better GPU utilization than vanilla Torch DDP."
+  },
+  {
+    "id": 16,
+    "domain": "Domain 2: ML Model Development",
+    "question": "SageMaker Debugger's primary purpose is to:",
+    "options": [
+      "Monitor model endpoints for data drift in production",
+      "Automatically detect training anomalies (vanishing gradients, overfitting) and emit actionable alerts",
+      "Explain model predictions using SHAP values",
+      "Version and register trained models in a central catalog"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker Debugger captures tensors during training and applies built-in rules (vanishing/exploding gradients, overfit, loss not decreasing, etc.) to automatically detect training problems and emit CloudWatch alerts. SageMaker Clarify handles SHAP explanations; Model Monitor handles production drift."
+  },
+  {
+    "id": 34,
+    "domain": "Domain 2: ML Model Development",
+    "question": "SageMaker JumpStart is best used for:",
+    "options": [
+      "Running custom distributed training scripts on multi-GPU clusters",
+      "Deploying and fine-tuning pre-trained foundation models (LLMs, vision models) with one-click or minimal code",
+      "Labeling large datasets with human annotators",
+      "Monitoring production model drift with statistical tests"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker JumpStart provides a model hub with hundreds of pre-trained foundation models (Llama, Falcon, Stable Diffusion, etc.) that can be deployed or fine-tuned with one click or a few lines of code. It handles the infrastructure complexity of large model deployment automatically."
+  },
+  {
+    "id": 35,
+    "domain": "Domain 2: ML Model Development",
+    "question": "Which SageMaker built-in algorithm is best suited for recommendation systems using collaborative filtering on user-item interaction matrices?",
+    "options": [
+      "DeepAR for time series",
+      "Factorization Machines (FM)",
+      "Object Detection",
+      "BlazingText for word embeddings"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker Factorization Machines is designed for high-dimensional sparse data like user-item matrices in recommendation systems. It learns latent factors for each user and item and predicts ratings or click probabilities. DeepAR is for time-series, BlazingText for NLP embeddings, Object Detection for CV."
+  },
+  {
+    "id": 41,
+    "domain": "Domain 2: ML Model Development",
+    "question": "Your team wants to integrate a large language model into an application using a simple API call, without managing any SageMaker endpoints or EC2 instances. Which AWS service is the correct choice?",
+    "options": [
+      "SageMaker JumpStart with auto-scaling to zero",
+      "Amazon Bedrock with on-demand model invocation",
+      "SageMaker Serverless Inference with a foundation model container",
+      "Amazon Comprehend with a custom classifier"
+    ],
+    "answer": 1,
+    "explanation": "Amazon Bedrock is a fully managed, serverless API for foundation models. You call InvokeModel (or InvokeModelWithResponseStream) and pay per token — no endpoints, no instances, no infrastructure to manage. SageMaker JumpStart deploys a foundation model to a SageMaker endpoint that runs in your account and requires instance management."
+  },
+  {
+    "id": 42,
+    "domain": "Domain 2: ML Model Development",
+    "question": "You are building a chatbot that must answer questions based on proprietary internal documents, using an Amazon Bedrock foundation model. Which Bedrock feature prevents hallucinations by grounding responses in retrieved document chunks?",
+    "options": [
+      "Bedrock Guardrails with grounding checks",
+      "Bedrock Knowledge Bases (Retrieval-Augmented Generation)",
+      "Bedrock Agents with a Lambda action group",
+      "Bedrock fine-tuning with the internal document corpus"
+    ],
+    "answer": 1,
+    "explanation": "Amazon Bedrock Knowledge Bases implements RAG: documents are chunked, embedded into a vector store (OpenSearch Serverless, Pinecone, etc.), and at query time, semantically similar chunks are retrieved and injected into the model prompt. This grounds the response in actual document content rather than model weights, reducing hallucinations. Guardrails apply content filters; Agents orchestrate multi-step tasks; fine-tuning bakes knowledge into weights but doesn't guarantee factual grounding at inference time."
+  },
+  {
+    "id": 43,
+    "domain": "Domain 2: ML Model Development",
+    "question": "Your team is pre-training a 70B parameter LLM across a 256-GPU cluster. Jobs run for 10+ days. Node failures mid-run force restarts from the beginning, wasting days of compute. Which SageMaker feature directly solves this?",
+    "options": [
+      "SageMaker Distributed Data Parallel with gradient checkpointing",
+      "SageMaker HyperPod with automatic failure detection and job resumption",
+      "SageMaker Managed Spot Training with checkpointing to S3",
+      "SageMaker Training Compiler with XLA optimization"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker HyperPod is designed for long-running, large-scale cluster training. It auto-detects node failures, replaces the failed node, and resumes training from the last checkpoint — without restarting the entire job. Spot Training handles interruptions from AWS spot capacity reclamation but doesn't replace failed nodes. DDP + gradient checkpointing reduces memory use, not failure recovery. Training Compiler optimizes compute operations."
+  },
+  {
+    "id": 44,
+    "domain": "Domain 2: ML Model Development",
+    "question": "A business analyst with no coding experience needs to build a churn prediction model from a CSV file in S3, without writing any Python or SQL. Which SageMaker service is designed for this use case?",
+    "options": [
+      "SageMaker Autopilot via the Python SDK",
+      "SageMaker Canvas",
+      "SageMaker Studio with a Jupyter notebook",
+      "SageMaker JumpStart fine-tuning UI"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker Canvas is the no-code, browser-based AutoML interface built for business analysts who don't write code. Users import data, select a target column, and Canvas handles the full ML pipeline (same engine as Autopilot). Autopilot requires the Python SDK or boto3; Studio requires notebook coding; JumpStart fine-tuning requires configuring training parameters."
+  }
+]

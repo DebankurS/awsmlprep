@@ -1,0 +1,132 @@
+[
+  {
+    "id": 24,
+    "domain": "Domain 4: Monitoring, Maintenance, and Security",
+    "question": "You deployed a SageMaker endpoint 3 months ago. Model predictions have gradually degraded in quality due to changes in real-world data patterns. What type of problem is this, and how do you detect it?",
+    "options": [
+      "Training-serving skew; use SageMaker Debugger to compare training tensors",
+      "Model drift / data drift; use SageMaker Model Monitor to compare production data statistics against a training baseline",
+      "Endpoint latency degradation; use CloudWatch Invocation latency metrics",
+      "Feature store staleness; refresh the online store with new batch snapshots"
+    ],
+    "answer": 1,
+    "explanation": "This is model/data drift — the input data distribution has shifted over time from what the model was trained on. SageMaker Model Monitor captures production request data, computes statistics (mean, std, percentiles, nulls), and compares them against a baseline captured at training time. Violations trigger CloudWatch alarms."
+  },
+  {
+    "id": 25,
+    "domain": "Domain 4: Monitoring, Maintenance, and Security",
+    "question": "SageMaker Model Monitor supports four types of monitoring. Which type detects that the model's accuracy or error rate has degraded in production?",
+    "options": [
+      "Data Quality Monitoring",
+      "Model Quality Monitoring",
+      "Bias Drift Monitoring",
+      "Feature Attribution Drift Monitoring"
+    ],
+    "answer": 1,
+    "explanation": "Model Quality Monitoring compares model predictions against ground truth labels (when available) to track metrics like accuracy, F1, RMSE over time. Data Quality monitors input feature distributions. Bias Drift monitors fairness metrics. Feature Attribution Drift monitors SHAP-based explanation changes."
+  },
+  {
+    "id": 26,
+    "domain": "Domain 4: Monitoring, Maintenance, and Security",
+    "question": "Which SageMaker feature helps you detect statistical bias in your training data and model predictions, and generate explainability reports using SHAP values?",
+    "options": [
+      "SageMaker Debugger",
+      "SageMaker Clarify",
+      "SageMaker Experiments",
+      "SageMaker Autopilot"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker Clarify provides bias detection and explainability. It measures pre-training bias (in your dataset) and post-training bias (in model predictions) using metrics like Class Imbalance and Difference in Positive Proportions. It also computes SHAP feature attributions at training time and for monitoring in production."
+  },
+  {
+    "id": 27,
+    "domain": "Domain 4: Monitoring, Maintenance, and Security",
+    "question": "Your SageMaker training job needs access to data in an S3 bucket and must not traverse the public internet. Which configuration ensures private connectivity?",
+    "options": [
+      "Use a public SageMaker endpoint with HTTPS encryption",
+      "Deploy the training job inside a VPC with an S3 VPC Gateway Endpoint and network isolation enabled",
+      "Use AWS Direct Connect and a dedicated SageMaker region",
+      "Enable SageMaker encryption at rest with AWS KMS"
+    ],
+    "answer": 1,
+    "explanation": "To prevent traffic from traversing the public internet, configure the training job to run inside a VPC and create an S3 VPC Gateway Endpoint. This routes S3 traffic through the AWS backbone. Network isolation mode (`enable_network_isolation=True`) further prevents the container from making outbound internet calls."
+  },
+  {
+    "id": 28,
+    "domain": "Domain 4: Monitoring, Maintenance, and Security",
+    "question": "What is the minimum IAM principle you should apply when creating an IAM execution role for a SageMaker Training Job?",
+    "options": [
+      "Attach the `AdministratorAccess` managed policy for simplicity",
+      "Attach `AmazonSageMakerFullAccess` managed policy",
+      "Grant only the specific S3 bucket read access, CloudWatch Logs write access, and ECR pull access needed by the job",
+      "Use the root account credentials passed as environment variables"
+    ],
+    "answer": 2,
+    "explanation": "The principle of least privilege: grant only the permissions the training job actually needs — read access to the specific S3 input bucket, write access to the output bucket, CloudWatch Logs for training output, and ECR pull for the training image. AdministratorAccess and root credentials massively over-permissioned and violate security best practices."
+  },
+  {
+    "id": 29,
+    "domain": "Domain 4: Monitoring, Maintenance, and Security",
+    "question": "Which AWS service should you use to automatically encrypt all data written to S3 by SageMaker jobs using customer-managed keys?",
+    "options": [
+      "AWS Secrets Manager",
+      "AWS Certificate Manager",
+      "AWS Key Management Service (KMS) with a customer-managed key (CMK)",
+      "Amazon Macie"
+    ],
+    "answer": 2,
+    "explanation": "AWS KMS provides customer-managed keys (CMK) for encryption. SageMaker training jobs, processing jobs, and endpoints accept a KmsKeyId parameter to encrypt all output artifacts, inter-node traffic, and storage volumes with your CMK. You retain full control of the key lifecycle."
+  },
+  {
+    "id": 30,
+    "domain": "Domain 4: Monitoring, Maintenance, and Security",
+    "question": "You want to trigger automatic model retraining whenever SageMaker Model Monitor detects a data quality violation. Which AWS service combination achieves this event-driven retraining?",
+    "options": [
+      "Model Monitor → CloudWatch Logs → AWS Glue job → SageMaker Training",
+      "Model Monitor → CloudWatch Alarm → Amazon EventBridge → AWS Lambda → SageMaker Pipelines execution",
+      "Model Monitor → SNS notification → SQS queue → EC2 instance → Training script",
+      "Model Monitor → S3 PUT event → Step Functions → EMR cluster"
+    ],
+    "answer": 1,
+    "explanation": "The canonical event-driven retraining pattern: Model Monitor emits a CloudWatch metric when a constraint is violated → CloudWatch Alarm triggers → EventBridge rule fires → Lambda (or directly EventBridge target) executes a SageMaker Pipeline → pipeline runs training, evaluation, and conditional model registration."
+  },
+  {
+    "id": 31,
+    "domain": "Domain 4: Monitoring, Maintenance, and Security",
+    "question": "Amazon Macie's role in an ML pipeline is to:",
+    "options": [
+      "Monitor SageMaker endpoint latency and throughput",
+      "Automatically detect and alert on sensitive data (PII, credentials) in Amazon S3 training datasets",
+      "Provide encryption for SageMaker inter-node communication",
+      "Scan ECR container images for known vulnerabilities"
+    ],
+    "answer": 1,
+    "explanation": "Amazon Macie uses ML to automatically discover and protect sensitive data (PII such as names, SSNs, credit card numbers, passwords) in S3. In an ML pipeline, Macie helps ensure training data compliance by identifying sensitive data before it's used for training, reducing regulatory risk."
+  },
+  {
+    "id": 37,
+    "domain": "Domain 4: Monitoring, Maintenance, and Security",
+    "question": "SageMaker Model Monitor's Data Quality baseline is established by:",
+    "options": [
+      "Manually specifying acceptable ranges for each feature in a JSON config file",
+      "Running a baseline processing job against your training/validation dataset to compute statistics and constraints",
+      "Using CloudWatch Logs from the first week of production traffic",
+      "Comparing predictions against ground truth labels in real-time"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker Model Monitor uses a SageMaker Processing job to analyze your training dataset and generate a baseline: `statistics.json` (feature distributions) and `constraints.json` (acceptable ranges, null thresholds, type checks). Scheduled monitoring jobs then compare production data against these constraints."
+  },
+  {
+    "id": 45,
+    "domain": "Domain 4: Monitoring, Maintenance, and Security",
+    "question": "Your Amazon Bedrock-powered application must block responses that contain PII (names, SSNs) and refuse to answer off-topic questions outside your domain. Which Bedrock feature enforces these constraints at inference time?",
+    "options": [
+      "Fine-tune the foundation model to refuse those topics",
+      "Amazon Bedrock Guardrails with PII redaction and denied topic filters",
+      "IAM resource policies restricting InvokeModel permissions",
+      "Amazon Macie scanning the Bedrock response stream"
+    ],
+    "answer": 1,
+    "explanation": "Amazon Bedrock Guardrails apply configurable filters at every model invocation: denied topics block off-domain questions, PII detection redacts or blocks sensitive entities in inputs and outputs, content filters block harmful content, and grounding checks reduce hallucinations. IAM controls who can call the API, not what the model says. Macie scans S3, not live API responses. Fine-tuning affects model weights but cannot guarantee runtime content enforcement."
+  }
+]

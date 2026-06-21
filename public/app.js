@@ -1,6 +1,26 @@
 // AWS ML Engineer Associate Study Dashboard - Application Logic
 
 // =========================================================================
+// 0. QUESTIONS LOADER
+// =========================================================================
+
+async function loadQuestions() {
+  const files = [
+    'questions/domain1.json',
+    'questions/domain2.json',
+    'questions/domain3.json',
+    'questions/domain4.json'
+  ];
+  const results = await Promise.all(
+    files.map(f => fetch(f).then(r => {
+      if (!r.ok) throw new Error(`Failed to load ${f}: ${r.status}`);
+      return r.json();
+    }))
+  );
+  window.PRACTICE_QUESTIONS = results.flat();
+}
+
+// =========================================================================
 // 1. DATA AND CONSTANTS
 // =========================================================================
 
@@ -297,6 +317,7 @@ async function saveProgress() {
 // =========================================================================
 document.addEventListener("DOMContentLoaded", async () => {
   initTheme();
+  await loadQuestions();
   await loadProgress();
   initTrackerState();
   renderChecklist();

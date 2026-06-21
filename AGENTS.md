@@ -29,9 +29,8 @@
 
 ## Keeping TODO.md current
 
-When completing any task listed in `TODO.md`, mark it done immediately:
-- Change `- [ ]` to `- [x]` for the completed item.
-- Do this in the same step as the fix — do not leave it for later.
+When completing any task listed in `TODO.md`, **delete the item** immediately — do not check it off or leave it marked `[x]`.
+- Delete in the same step as the fix — do not leave it for later.
 
 ## Keeping AGENTS.md current
 After any change to the repo, check if AGENTS.md is still accurate. Update it if you:

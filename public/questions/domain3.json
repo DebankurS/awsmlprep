@@ -1,0 +1,119 @@
+[
+  {
+    "id": 17,
+    "domain": "Domain 3: Deployment and Orchestration",
+    "question": "You need to run inference on 1 billion records in S3 overnight. Low latency is not a requirement. Which SageMaker inference option is most cost-effective?",
+    "options": [
+      "SageMaker Real-Time Endpoint with auto-scaling",
+      "SageMaker Batch Transform",
+      "SageMaker Serverless Inference",
+      "SageMaker Asynchronous Inference"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker Batch Transform is designed for offline, large-scale batch inference. It spins up instances, processes all records from S3, writes results to S3, then terminates — you only pay for the duration of the job. Real-Time Endpoints stay running (cost continues). Async Inference is for requests that take minutes, not bulk batch jobs."
+  },
+  {
+    "id": 18,
+    "domain": "Domain 3: Deployment and Orchestration",
+    "question": "You want to deploy two versions of a model to production simultaneously and route 10% of traffic to the new version for A/B testing. How do you achieve this with SageMaker?",
+    "options": [
+      "Deploy two separate endpoints and use Route 53 weighted routing",
+      "Create one SageMaker endpoint with two production variants and configure traffic weights",
+      "Use SageMaker Multi-Model Endpoints with a custom routing header",
+      "Use Amazon API Gateway canary deployments pointing to two Lambda functions"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker endpoints support multiple production variants with configurable traffic weights. Set variant 1 to weight 90 and variant 2 to weight 10 on a single endpoint. You can shift traffic gradually via UpdateEndpointWeightsAndCapacities without taking the endpoint offline."
+  },
+  {
+    "id": 19,
+    "domain": "Domain 3: Deployment and Orchestration",
+    "question": "You have 50 different customer-specific models, each small in size. Hosting 50 separate endpoints would be prohibitively expensive. Which SageMaker feature solves this?",
+    "options": [
+      "SageMaker Serverless Inference with 50 concurrency slots",
+      "SageMaker Multi-Model Endpoints (MME)",
+      "SageMaker Asynchronous Inference with S3 queuing",
+      "SageMaker Batch Transform with a routing file"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker Multi-Model Endpoints (MME) host multiple models on a single endpoint. Models are loaded/evicted from memory on demand using an LRU cache. You only pay for one endpoint instance regardless of model count — ideal for many small, customer-specific models that aren't all called simultaneously."
+  },
+  {
+    "id": 20,
+    "domain": "Domain 3: Deployment and Orchestration",
+    "question": "Which AWS service provides a native, purpose-built CI/CD pipeline orchestration for ML workflows, with built-in integration for SageMaker Training, Processing, and Model Registry?",
+    "options": [
+      "AWS Step Functions with SageMaker integration",
+      "Amazon MWAA (Managed Airflow)",
+      "SageMaker Pipelines",
+      "AWS CodePipeline with SageMaker actions"
+    ],
+    "answer": 2,
+    "explanation": "SageMaker Pipelines is the purpose-built MLOps orchestration service. It natively integrates with all SageMaker job types (Training, Processing, Transform, Clarify, Tuning), Model Registry, and SageMaker Studio. It provides a DAG-based workflow with caching, lineage tracking, and CloudWatch integration."
+  },
+  {
+    "id": 21,
+    "domain": "Domain 3: Deployment and Orchestration",
+    "question": "Your ML endpoint receives inference requests that take 3-5 minutes to process (large video files). Users cannot wait synchronously. Which SageMaker inference option is best?",
+    "options": [
+      "SageMaker Real-Time Inference with a 600-second timeout",
+      "SageMaker Batch Transform scheduled hourly",
+      "SageMaker Asynchronous Inference",
+      "SageMaker Serverless Inference with maximum memory"
+    ],
+    "answer": 2,
+    "explanation": "SageMaker Asynchronous Inference queues requests and processes them in the background, supporting payloads up to 1 GB and processing times up to 1 hour. The client gets a presigned S3 URL to poll for the result. Ideal for long-running inference tasks. Real-Time Inference has a 60-second synchronous timeout."
+  },
+  {
+    "id": 22,
+    "domain": "Domain 3: Deployment and Orchestration",
+    "question": "SageMaker Model Registry's primary purpose in an MLOps pipeline is to:",
+    "options": [
+      "Store raw training datasets and feature definitions",
+      "Version, approve, and manage the deployment lifecycle of trained models",
+      "Monitor production model performance and detect drift",
+      "Orchestrate the sequence of training, evaluation, and deployment steps"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker Model Registry is the centralized catalog for trained models. It supports versioning (model packages), approval workflows (PendingManualApproval → Approved → Rejected), and deployment tracking. Approved model packages can trigger automated deployment pipelines via EventBridge rules."
+  },
+  {
+    "id": 23,
+    "domain": "Domain 3: Deployment and Orchestration",
+    "question": "Which SageMaker endpoint configuration minimizes cost for an endpoint that receives intermittent traffic with no requests during off-peak hours?",
+    "options": [
+      "Real-Time Inference with minimum instance count of 1",
+      "Serverless Inference",
+      "Asynchronous Inference with auto-scaling to zero",
+      "Multi-Model Endpoint with on-demand loading"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker Serverless Inference scales to zero when idle and charges only per inference request (compute duration + number of requests). There is no cost when no requests come in. Real-Time Inference with min=1 keeps an instance running 24/7. Best for sporadic/unpredictable traffic."
+  },
+  {
+    "id": 32,
+    "domain": "Domain 3: Deployment and Orchestration",
+    "question": "You need to deploy a large language model (LLM) that requires 4x A100 GPUs for inference. Which SageMaker inference option supports multi-GPU model parallelism at serving time?",
+    "options": [
+      "SageMaker Serverless Inference",
+      "SageMaker Batch Transform with p3.8xlarge",
+      "SageMaker Real-Time Inference with Large Model Inference (LMI) container and model parallelism",
+      "SageMaker Multi-Model Endpoint with GPU sharing"
+    ],
+    "answer": 2,
+    "explanation": "SageMaker Large Model Inference (LMI) containers support tensor parallelism across multiple GPUs on a single instance (or across instances) using DeepSpeed, Transformers NeuronX, or vLLM backends. This is the correct approach for LLMs that don't fit on a single GPU."
+  },
+  {
+    "id": 36,
+    "domain": "Domain 3: Deployment and Orchestration",
+    "question": "Which AWS service can trigger a SageMaker Pipeline execution on a schedule (e.g., weekly model retraining)?",
+    "options": [
+      "AWS Step Functions with a Wait state",
+      "Amazon EventBridge Scheduler targeting the SageMaker Pipelines StartPipelineExecution API",
+      "Amazon SQS with delayed messages",
+      "AWS Batch with a cron-based job queue"
+    ],
+    "answer": 1,
+    "explanation": "Amazon EventBridge Scheduler (or EventBridge Rules with cron expressions) can invoke the SageMaker Pipelines StartPipelineExecution API directly as a target. This is the standard pattern for schedule-based continuous training: EventBridge cron → SageMaker Pipeline → train, evaluate, register."
+  }
+]

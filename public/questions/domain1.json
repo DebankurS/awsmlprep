@@ -1,0 +1,158 @@
+[
+  {
+    "id": 1,
+    "domain": "Domain 1: Data Preparation for ML",
+    "question": "Your team stores 500 TB of raw training data in Amazon S3. You need to run feature engineering at scale before training. Which AWS service is best suited for distributed, serverless ETL on this data?",
+    "options": [
+      "AWS Glue with Spark ETL jobs",
+      "Amazon Kinesis Data Streams",
+      "Amazon RDS with read replicas",
+      "AWS Lambda with S3 triggers"
+    ],
+    "answer": 0,
+    "explanation": "AWS Glue provides serverless, fully managed Apache Spark ETL at petabyte scale. Kinesis is for real-time streaming ingest, RDS is for relational workloads, and Lambda has a 15-minute timeout/memory ceiling not suited for large-scale batch transforms."
+  },
+  {
+    "id": 2,
+    "domain": "Domain 1: Data Preparation for ML",
+    "question": "You need to serve low-latency feature lookups (< 5ms) at inference time while also reading historical feature snapshots for training. Which SageMaker Feature Store configuration achieves this?",
+    "options": [
+      "Use only the offline store backed by Amazon S3",
+      "Use only the online store backed by Amazon DynamoDB",
+      "Enable both online and offline stores; use online store for inference, offline for training",
+      "Use Amazon ElastiCache instead of SageMaker Feature Store"
+    ],
+    "answer": 2,
+    "explanation": "SageMaker Feature Store supports dual stores: the online store (DynamoDB-backed) for sub-millisecond inference lookups, and the offline store (S3-backed) for training data retrieval with point-in-time consistency to prevent data leakage."
+  },
+  {
+    "id": 3,
+    "domain": "Domain 1: Data Preparation for ML",
+    "question": "A dataset for a fraud detection model is 98% legitimate and 2% fraud. Which strategy best addresses this class imbalance when training with SageMaker?",
+    "options": [
+      "Use accuracy as the primary metric and increase epochs",
+      "Downsample the majority class or apply SMOTE; use Precision-Recall AUC or F1 as the evaluation metric",
+      "Increase the learning rate to force the model to learn rare patterns",
+      "Use the full imbalanced dataset with no modifications"
+    ],
+    "answer": 1,
+    "explanation": "For severe class imbalance, accuracy is misleading (a model predicting all legitimate would score 98%). Best practices: downsample the majority class, oversample the minority (SMOTE), or apply class weights. Use Precision-Recall AUC or F1-Score which are robust to imbalance."
+  },
+  {
+    "id": 4,
+    "domain": "Domain 1: Data Preparation for ML",
+    "question": "You want to collect human-labeled annotations for a custom image classification model at scale, with built-in quality control using multiple annotators. Which AWS service should you use?",
+    "options": [
+      "Amazon Rekognition Custom Labels",
+      "SageMaker Ground Truth",
+      "Amazon Mechanical Turk directly via API",
+      "AWS Batch with custom labeling scripts"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker Ground Truth provides managed data labeling workflows with built-in quality control (annotation consolidation, worker agreement scoring). It can route tasks to Amazon Mechanical Turk, private teams, or AWS pre-trained workers, and supports active learning to reduce labeling costs."
+  },
+  {
+    "id": 5,
+    "domain": "Domain 1: Data Preparation for ML",
+    "question": "Which AWS service provides a visual, low-code interface for exploring, transforming, and visualizing ML training data directly in SageMaker Studio?",
+    "options": [
+      "Amazon QuickSight",
+      "SageMaker Data Wrangler",
+      "AWS Glue DataBrew",
+      "Amazon Athena"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker Data Wrangler is the visual data preparation tool integrated into SageMaker Studio. It provides 300+ built-in transformations, statistical visualizations, and bias detection, and can export flows directly to SageMaker Pipelines or feature store ingestion jobs."
+  },
+  {
+    "id": 6,
+    "domain": "Domain 1: Data Preparation for ML",
+    "question": "You need to ingest real-time clickstream data into your ML training pipeline for near-real-time model retraining. Which combination of AWS services best handles streaming ingest and durable storage?",
+    "options": [
+      "Amazon Kinesis Data Streams → Amazon Kinesis Data Firehose → Amazon S3",
+      "AWS Lambda → Amazon RDS → Amazon S3",
+      "Amazon SQS → AWS Batch → Amazon EFS",
+      "Amazon MSK → AWS Glue → Amazon Redshift only"
+    ],
+    "answer": 0,
+    "explanation": "Amazon Kinesis Data Streams handles real-time ingest with sub-second latency. Kinesis Data Firehose then delivers the stream to Amazon S3 (or Redshift/OpenSearch) durably. This is the canonical AWS pattern for streaming data pipelines that feed ML training."
+  },
+  {
+    "id": 7,
+    "domain": "Domain 1: Data Preparation for ML",
+    "question": "Your training dataset contains 15% missing values in a key numerical feature. Which imputation strategy is most appropriate for a tabular regression problem?",
+    "options": [
+      "Drop all rows with missing values",
+      "Replace with the column mean or median; or use model-based imputation (KNN, iterative)",
+      "Replace with the string 'NULL' and let the model handle it",
+      "Duplicate existing rows to fill missing values"
+    ],
+    "answer": 1,
+    "explanation": "Mean/median imputation is the standard baseline. For better accuracy, model-based imputation (KNN imputer, iterative imputer) uses surrounding features to predict the missing value. Dropping 15% of rows loses significant signal. Replacing with 'NULL' string in a numerical feature will break numeric models."
+  },
+  {
+    "id": 8,
+    "domain": "Domain 1: Data Preparation for ML",
+    "question": "When should you use Amazon Kinesis Data Firehose instead of Amazon Kinesis Data Streams for an ML data pipeline?",
+    "options": [
+      "When you need sub-second latency and custom consumer processing",
+      "When you need fully managed delivery to S3/Redshift/OpenSearch with no consumer code to write",
+      "When you need replay of records from the last 7 days",
+      "When you need to fan out to multiple downstream consumers simultaneously"
+    ],
+    "answer": 1,
+    "explanation": "Kinesis Data Firehose is a fully managed delivery service — no consumer code needed. It buffers and batches records then delivers to S3, Redshift, or OpenSearch. Data Streams requires you to write custom consumer code (KCL/Lambda), supports replay, and fans out to multiple consumers. Choose Firehose for simple S3 delivery."
+  },
+  {
+    "id": 33,
+    "domain": "Domain 1: Data Preparation for ML",
+    "question": "When building a time-series forecasting model, what data split strategy prevents data leakage?",
+    "options": [
+      "Random shuffle and split 80/20 train/test",
+      "Chronological split: train on past data, validate/test on future time windows",
+      "K-fold cross-validation with stratification",
+      "Randomly sample 20% of time points for testing"
+    ],
+    "answer": 1,
+    "explanation": "For time-series data, always use chronological splits. Random splitting causes data leakage because future data points would appear in the training set. The correct approach: train on the first 70% of the time range, validate on the next 15%, test on the final 15% — maintaining temporal order."
+  },
+  {
+    "id": 38,
+    "domain": "Domain 1: Data Preparation for ML",
+    "question": "Amazon SageMaker Processing Jobs are best used for:",
+    "options": [
+      "Real-time inference on incoming requests",
+      "Pre-processing data, post-processing predictions, and model evaluation as standalone batch jobs",
+      "Managing training job hyperparameter tuning",
+      "Hosting models as HTTP endpoints"
+    ],
+    "answer": 1,
+    "explanation": "SageMaker Processing Jobs run arbitrary batch workloads (scikit-learn, Spark, custom containers) on managed compute. They are used for: data preprocessing before training, feature engineering, post-processing inference output, model evaluation (computing metrics), and bias/explainability analysis via SageMaker Clarify."
+  },
+  {
+    "id": 39,
+    "domain": "Domain 1: Data Preparation for ML",
+    "question": "When retrieving features from SageMaker Feature Store to build a training dataset, why must you use point-in-time (as-of) joins?",
+    "options": [
+      "To improve query performance by reducing the scan range",
+      "To ensure only feature values available at the original prediction time are used, preventing future data leakage",
+      "To join features from the online store with the offline store automatically",
+      "To reduce storage costs by deduplicating feature records"
+    ],
+    "answer": 1,
+    "explanation": "Point-in-time joins retrieve the feature value that existed at or before a specific timestamp (the label event time). Without this, training could inadvertently use feature values from after the event, leaking future information into training and causing inflated offline metrics that don't generalize to production."
+  },
+  {
+    "id": 40,
+    "domain": "Domain 1: Data Preparation for ML",
+    "question": "You need to auto-discover the schema of raw CSV and Parquet files landing in S3 and make them queryable via Amazon Athena. Which AWS Glue feature handles this with no manual schema definition?",
+    "options": [
+      "AWS Glue DataBrew visual recipes",
+      "AWS Glue Crawlers writing to the Glue Data Catalog",
+      "AWS Glue Streaming ETL jobs",
+      "Amazon Kinesis Data Firehose with schema detection"
+    ],
+    "answer": 1,
+    "explanation": "AWS Glue Crawlers scan S3 paths, infer schemas (column names, types, partitions), and write table definitions to the Glue Data Catalog. Once cataloged, tables are immediately queryable via Athena or accessible to Glue ETL jobs — no manual DDL needed. DataBrew is for visual transformations; Streaming ETL is for continuous processing."
+  }
+]
