@@ -488,12 +488,14 @@ function loadNotesDoc(filename) {
       bodyEl.innerHTML = parseSimpleMarkdown(markdown);
       loaderEl.classList.add("hidden");
       bodyEl.classList.remove("hidden");
+      if (window.Prism) Prism.highlightAllUnder(bodyEl);
     })
     .catch(err => {
       console.warn("Falling back to offline content.", err);
       bodyEl.innerHTML = NOTES_OFFLINE_FALLBACK[filename] || "<h3>Content not found offline.</h3>";
       loaderEl.classList.add("hidden");
       bodyEl.classList.remove("hidden");
+      if (window.Prism) Prism.highlightAllUnder(bodyEl);
     });
 }
 
@@ -501,9 +503,9 @@ function parseSimpleMarkdown(md) {
   let html = md;
   html = html.replace(/```mermaid[\s\S]*?```/g, '');
   const codeBlocks = [];
-  html = html.replace(/```(?:[a-zA-Z0-9_\-]+)?\n([\s\S]*?)```/g, (match, codeContent) => {
+  html = html.replace(/```([a-zA-Z0-9_\-]+)?\n([\s\S]*?)```/g, (match, lang, codeContent) => {
     const placeholder = `__CODE_BLOCK_PLACEHOLDER_${codeBlocks.length}__`;
-    codeBlocks.push(codeContent);
+    codeBlocks.push({ lang: lang || 'text', content: codeContent });
     return placeholder;
   });
   const inlineCodes = [];
@@ -549,7 +551,7 @@ function parseSimpleMarkdown(md) {
   html = lines.join('\n');
   const escHtml = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   inlineCodes.forEach((c, i) => { html = html.replace(`__INLINE_CODE_PLACEHOLDER_${i}__`, () => `<code>${escHtml(c)}</code>`); });
-  codeBlocks.forEach((c, i) => { html = html.replace(`__CODE_BLOCK_PLACEHOLDER_${i}__`, () => `<pre><code>${escHtml(c)}</code></pre>`); });
+  codeBlocks.forEach((block, i) => { html = html.replace(`__CODE_BLOCK_PLACEHOLDER_${i}__`, () => `<pre><code class="language-${block.lang}">${escHtml(block.content)}</code></pre>`); });
   return html;
 }
 
@@ -734,10 +736,14 @@ function loadCodeSnippet(filename) {
   codeEl.className = 'language-python';
   fetch(`./src/snippets/${filename}`)
     .then(response => { if (!response.ok) throw new Error("CORS or Snippet Not Found"); return response.text(); })
-    .then(code => { codeEl.textContent = code; })
+    .then(code => { 
+      codeEl.textContent = code; 
+      if (window.Prism) Prism.highlightElement(codeEl);
+    })
     .catch(err => {
       console.warn("Falling back to offline snippet.", err);
       codeEl.textContent = SNIPPET_OFFLINE_FALLBACK[filename] || "# Snippet not found offline.";
+      if (window.Prism) Prism.highlightElement(codeEl);
     });
 }
 

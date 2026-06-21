@@ -17,11 +17,19 @@ console.log("1. Testing questions.js integrity...");
 try {
   const { PRACTICE_QUESTIONS } = require('./public/questions.js');
   assert.ok(Array.isArray(PRACTICE_QUESTIONS), "PRACTICE_QUESTIONS should be an array");
-  assert.ok(PRACTICE_QUESTIONS.length >= 30, `Should contain at least 30 questions (found ${PRACTICE_QUESTIONS.length})`);
+  assert.strictEqual(PRACTICE_QUESTIONS.length, 45, `Should contain exactly 45 questions (found ${PRACTICE_QUESTIONS.length})`);
+
+  const VALID_DOMAINS = new Set([
+    "Domain 1: Data Preparation for ML",
+    "Domain 2: ML Model Development",
+    "Domain 3: Deployment and Orchestration",
+    "Domain 4: Monitoring, Maintenance, and Security"
+  ]);
 
   PRACTICE_QUESTIONS.forEach((q, idx) => {
     assert.strictEqual(typeof q.id, 'number', `Question [${idx}] should have a numeric id`);
     assert.ok(q.domain && typeof q.domain === 'string', `Question [${idx}] should have a string domain`);
+    assert.ok(VALID_DOMAINS.has(q.domain), `Question [${idx}] has unknown domain: "${q.domain}"`);
     assert.ok(q.question && typeof q.question === 'string', `Question [${idx}] should have a string question`);
     assert.ok(Array.isArray(q.options), `Question [${idx}] should have an options array`);
     assert.strictEqual(q.options.length, 4, `Question [${idx}] should have exactly 4 options`);
